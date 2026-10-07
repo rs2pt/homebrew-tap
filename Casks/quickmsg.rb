@@ -7,16 +7,18 @@ cask "quickmsg" do
   desc "Quick Look preview for Outlook .msg files"
   homepage "https://github.com/rs2pt/QuickMSG"
 
-  depends_on macos: ">= :ventura"
+  depends_on macos: :ventura
 
   app "QuickMSG.app"
 
-  # Not notarized (no paid Apple Developer account): drop the quarantine flag and register the extension.
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/QuickMSG.app"]
-    system_command "/usr/bin/pluginkit",
-                   args: ["-a", "#{appdir}/QuickMSG.app/Contents/PlugIns/PreviewExtension.appex"]
+  # Not notarized (no paid Apple Developer account): drop the quarantine flag and register the extension(s).
+  postflight_steps do
+    run "/usr/bin/xattr",
+        args: ["-dr", "com.apple.quarantine", "{{appdir}}/QuickMSG.app"],
+        must_succeed: false
+    run "/usr/bin/pluginkit",
+        args: ["-a", "{{appdir}}/QuickMSG.app/Contents/PlugIns/PreviewExtension.appex"],
+        must_succeed: false
   end
 
   caveats <<~EOS
