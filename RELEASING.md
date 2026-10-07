@@ -5,7 +5,19 @@ from a GitHub release, so a release needs a zip, a tag, and a cask pointing at b
 
 Users get the update with `brew update && brew upgrade --cask <name>`; nothing else is needed on their side.
 
-## Publish a new version
+## Quick way: the script
+
+```sh
+scripts/release.sh quickmsg 1.1            # build, zip, GitHub release, update the cask, verify
+scripts/release.sh quickmsg 1.1 --dry-run  # build and zip only, publish nothing
+```
+
+It expects the project on a clean `main` equal to `origin/main`, with `MARKETING_VERSION` already set to the new
+version. Release notes default to the commit subjects since the previous tag plus the authorization note; pass
+`--notes "..."` to override. New projects need one line added to the `case` in the script. The manual steps below
+are what it automates.
+
+## Publish a new version (manual)
 
 Example for `quickmsg` (`QuickMSG`, scheme `QuickMSG`, zip `QuickMSG-<version>.zip`, tag `v<version>`).
 
