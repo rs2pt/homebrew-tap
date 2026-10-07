@@ -11,14 +11,9 @@ cask "quickmsg" do
 
   app "QuickMSG.app"
 
-  # Not notarized (no paid Apple Developer account): drop the quarantine flag and register the extension(s).
+  # Not notarized (no paid Apple Developer account): drop the quarantine flag.
   postflight_steps do
-    run "/usr/bin/xattr",
-        args: ["-dr", "com.apple.quarantine", "{{appdir}}/QuickMSG.app"],
-        must_succeed: false
-    run "/usr/bin/pluginkit",
-        args: ["-a", "{{appdir}}/QuickMSG.app/Contents/PlugIns/PreviewExtension.appex"],
-        must_succeed: false
+    run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{appdir}}/QuickMSG.app"], must_succeed: false
   end
 
   caveats <<~EOS
@@ -26,6 +21,7 @@ cask "quickmsg" do
     Apple Developer account). The quarantine flag was removed for you, but if macOS still asks
     you to authorize the app, allow it under System Settings → Privacy & Security → "Open Anyway".
 
-    If previews don't appear right away, run: qlmanage -r
+    Open the app once so macOS registers the extension. If previews don't appear
+    right away, run: qlmanage -r
   EOS
 end

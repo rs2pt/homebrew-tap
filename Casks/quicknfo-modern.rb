@@ -11,17 +11,9 @@ cask "quicknfo-modern" do
 
   app "QuickNFO.app"
 
-  # Not notarized (no paid Apple Developer account): drop the quarantine flag and register the extension(s).
+  # Not notarized (no paid Apple Developer account): drop the quarantine flag.
   postflight_steps do
-    run "/usr/bin/xattr",
-        args: ["-dr", "com.apple.quarantine", "{{appdir}}/QuickNFO.app"],
-        must_succeed: false
-    run "/usr/bin/pluginkit",
-        args: ["-a", "{{appdir}}/QuickNFO.app/Contents/PlugIns/PreviewExtension.appex"],
-        must_succeed: false
-    run "/usr/bin/pluginkit",
-        args: ["-a", "{{appdir}}/QuickNFO.app/Contents/PlugIns/ThumbnailExtension.appex"],
-        must_succeed: false
+    run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{appdir}}/QuickNFO.app"], must_succeed: false
   end
 
   caveats <<~EOS
@@ -29,6 +21,7 @@ cask "quicknfo-modern" do
     paid Apple Developer account). The quarantine flag was removed for you, but if macOS still
     asks you to authorize the app, allow it under System Settings → Privacy & Security → "Open Anyway".
 
-    If previews or thumbnails don't appear right away, run: qlmanage -r && qlmanage -r cache
+    Open the app once so macOS registers the extensions. If previews or thumbnails
+    don't appear right away, run: qlmanage -r && qlmanage -r cache
   EOS
 end
